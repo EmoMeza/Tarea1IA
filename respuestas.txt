@@ -1,0 +1,25 @@
+1- Un ejemplo de espacio de búsqueda que cumple con las condiciones solicitadas sería un laberinto complejo donde la salida está en un nodo final del árbol de búsqueda. Si el límite de profundidad para el método de búsqueda de profundidad iterativa es menor que la profundidad en la que se encuentra la salida, este método tendría un peor desempeño ya que tendría que explorar repetidamente todos los niveles superiores antes de poder encontrar la salida. Por otro lado, el método de búsqueda en profundidad (básico) encontraría la salida más rápidamente, ya que no se detendría en los nodos de los niveles superiores.
+
+2.1- Los estados del problema son: todos los bloques pueden estar sobre la mesa o sobre otro bloque.
+Estado inicial: Bloques A, B y D sobre la mesa y el bloque C sobre el D.
+Test objetivo: Una torre donde el bloque A se encuentre sobre el bloque B, y el bloque B sobre el bloque C que se encuentra sobre la mesa.
+Acciones: Solamente se puede mover un bloque a la vez. Un bloque puede moverse sobre la mesa u otro bloque solo si no tiene un bloque encima de sí mismo.
+
+2.2-
+
+- Si un bloque tiene la cantidad correcta de bloques sobre sí mismo se le asigna el valor 0.
+- Si un bloque no tiene la cantidad correcta de bloques sobre sí mismo se le asigna el valor 1.
+
+Si estamos en un caso óptimo, se necesitará solamente un movimiento para mover un bloque que se encuentra en un lugar erróneo, mientras que en un caso no óptimo puede llegar a tomar más tiempo.
+Por lo anterior, la heurística es admisible, ya que no sobreestima el costo del estado.
+
+3-No, ya que al ser un problema que cuenta con múltiples mínimos locales y con un espacio de estados tan amplio, existen muchos estados intermedios que no llevan al estado objetivo, causando que el algoritmo Hill Climbing se atasque en un mínimo local sin la solución óptima.
+
+4-
+    h3(n) -> Sí, ya que a pesar de entregar el valor maximo entre h1(n) y h2(n), siempre debería entregar un valor que no sobreestime el costo del estado.
+    h4(n) -> No, ya que al multiplicar 1.1 por h2(n), podría entregar un valor que sobreestime el costo del estado.
+    h5(n) -> Sí, ya que aunque se multiplique por 3 el h2(n), al entregar el valor mínimo entre 3*h2(n) y h1(n), siempre debería entregar un valor que no sobreestime el costo del estado.
+    h6(n) -> Sí, ya que a pesar de sumarse h1(n) y h2(n) siendo heurísticas admisibles, al entregar la división de esta suma seguirá siendo admisible.
+
+Dependiendo del problema usaria la heuristica h3(n), ya que me entrega un valor maximo el cual se acerca al costo real del estado, sin sobreestimar el costo del estado. Pero h6(n) lo utilizaria dependiendo del problema y conociendo bien como funciona h1(n) y h2(n). Mientras que h5(n) y h4(n) no las utilizaria, ya que h4(n) no es admisible y h5(n) no nos entregaria un valor que se acerque al costo real del estado.
+
