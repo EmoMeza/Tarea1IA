@@ -29,15 +29,6 @@ class Node:
             if t[0] == name:
                 self.tuple.remove(t)
                 break
-
-
-def compareNodes(Node1, Node2):
-    if Node1.heuristic_value < Node2.heuristic_value:
-        return -1
-    elif Node1.heuristic_value > Node2.heuristic_value:
-        return 1
-    else:
-        return 0
     
 def read_input():
     with open('input.txt') as f:
@@ -153,10 +144,7 @@ def uniform_cost_search(nodes, initial_state, goal_state):
     print(f'Total number of nodes expanded: {sum(n.times_expanded for n in nodes)}')
     print("Cost: ", path[-1][1])
 
-
-# def Greedy_Best_First_Search(nodes, initial_state, goal_state):         
-
-
+# def Greedy_Best_First_Search(nodes, initial_state, goal_state):        
 
 def main():
     nodes=[]
