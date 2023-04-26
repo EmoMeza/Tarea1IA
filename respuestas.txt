@@ -22,4 +22,3 @@ Por lo anterior, la heurística es admisible, ya que no sobreestima el costo del
     h6(n) -> Sí, ya que a pesar de sumarse h1(n) y h2(n) siendo heurísticas admisibles, al entregar la división de esta suma seguirá siendo admisible.
 
 Dependiendo del problema usaria la heuristica h3(n), ya que me entrega un valor maximo el cual se acerca al costo real del estado, sin sobreestimar el costo del estado. Pero h6(n) lo utilizaria dependiendo del problema y conociendo bien como funciona h1(n) y h2(n). Mientras que h5(n) y h4(n) no las utilizaria, ya que h4(n) no es admisible y h5(n) no nos entregaria un valor que se acerque al costo real del estado.
-
