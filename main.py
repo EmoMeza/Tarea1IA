@@ -20,13 +20,15 @@ class Node:
 
     def get_name_tuple(self, index):
         return self.tuple[index][0]
+    def get_heuristic_value():
+        return self.heuristic_value
         
     def print_node(self):
         print(self.name, self.heuristic_value, self.times_expanded, self.tuple)
     def erase_tuple(self, name):
         #if the first element of the tuple is the name we want to erase, we erase it
         for t in self.tuple:
-            if t[0] == name:
+            if t[0].name == name:
                 self.tuple.remove(t)
                 break
     
@@ -144,7 +146,51 @@ def uniform_cost_search(nodes, initial_state, goal_state):
     print(f'Total number of nodes expanded: {sum(n.times_expanded for n in nodes)}')
     print("Cost: ", path[-1][1])
 
-# def Greedy_Best_First_Search(nodes, initial_state, goal_state):        
+def Greedy_Best_First_Search(nodes, initial_state, goal_state):
+    #falta agregar bien el output
+    gbfs=[]
+    gbfs=nodes
+    cost=initial_state.heuristic_value
+    stack=[initial_state]
+    while stack:
+        current_node = get_smallest_node_by_heuristic_value(stack[-1])
+        heuristic_value = current_node.heuristic_value
+        stack[-1].increase_expanded()
+        cost += heuristic_value
+        stack.append(current_node)
+        print(f'current node: {current_node.name}')
+        if stack[-1].name == goal_state:
+            print("Goal state found")
+            break
+        if len(stack[-1].tuple)==0:
+            last_node_name=stack[-1].name
+            stack.pop()
+            for tp in stack[-1].tuple:
+                if tp[0].name == last_node_name:
+                    cost -= tp[0].heuristic_value
+                    stack[-1].erase_tuple(last_node_name)
+                    print(stack[-1].tuple)
+                    print(f'erased: {last_node_name} from parent: {stack[-1].name}')
+                    break
+
+    print(cost)
+    print(stack[-1].name)
+    print("-----")
+    #printe the stack
+    for n in stack:
+        print(n.name)
+    
+    # while stack:
+
+def get_heuristic(node):
+    return node[0].heuristic_value
+
+def get_smallest_node_by_heuristic_value(node):
+    tuples=[]
+    for i in range(len(node.tuple)):
+        tuples.append(node.tuple[i])  
+    smallest_node= min(tuples,key=get_heuristic)
+    return smallest_node[0]
 
 def main():
     nodes=[]
@@ -153,10 +199,10 @@ def main():
         if n.name == initial_state:
             initial_state = n
     #get initial state and goal state nodes
-    print("First Depth Search (random):")
-    random_depth_search(nodes, initial_state, goal_state)
-    print("Uniform Cost Search:")
-    uniform_cost_search(nodes, initial_state, goal_state)
-
+    # print("First Depth Search (random):")
+    # random_depth_search(nodes, initial_state, goal_state)
+    # print("Uniform Cost Search:")
+    # uniform_cost_search(nodes, initial_state, goal_state)
+    #Greedy_Best_First_Search(nodes, initial_state, goal_state)
 if __name__ == "__main__":
     main()
