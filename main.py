@@ -60,6 +60,9 @@ def read_input():
                         second_node = n
                 #add the tuple to the node
                 node.add_tuple((second_node, int(line.split()[2])))
+        for n in nodes:
+            if n.name == initial_state:
+                initial_state = n
         return initial_state, goal_state, nodes
     
 def print_nodes(nodes):
@@ -150,7 +153,7 @@ def Greedy_Best_First_Search(nodes, initial_state, goal_state):
     #falta agregar bien el output
     gbfs=[]
     gbfs=nodes
-    cost=initial_state.heuristic_value
+    cost=0
     stack=[initial_state]
     while stack:
         current_node = get_smallest_node_by_heuristic_value(stack[-1])
@@ -158,7 +161,6 @@ def Greedy_Best_First_Search(nodes, initial_state, goal_state):
         stack[-1].increase_expanded()
         cost += heuristic_value
         stack.append(current_node)
-        print(f'current node: {current_node.name}')
         if stack[-1].name == goal_state:
             print("Goal state found")
             break
@@ -170,15 +172,14 @@ def Greedy_Best_First_Search(nodes, initial_state, goal_state):
                     cost -= tp[0].heuristic_value
                     stack[-1].erase_tuple(last_node_name)
                     print(stack[-1].tuple)
-                    print(f'erased: {last_node_name} from parent: {stack[-1].name}')
                     break
 
-    print(cost)
-    print(stack[-1].name)
-    print("-----")
     #printe the stack
+    print("Path from initial state to goal state: ")
     for n in stack:
-        print(n.name)
+        print(f'{n.name} Expanded: {n.times_expanded}')
+    print(f'Total number of nodes expanded: {sum(n.times_expanded for n in nodes)}')
+    print("Cost: ", cost)
     
     # while stack:
 
@@ -192,17 +193,69 @@ def get_smallest_node_by_heuristic_value(node):
     smallest_node= min(tuples,key=get_heuristic)
     return smallest_node[0]
 
+def A_star_search(nodes, initial_state, goal_state):
+    #create a node called finish that has the name as "finish"
+    finish = Node("finish", 0)
+    queue = [(initial_state,0,finish)]
+    best_route = []
+    while queue:
+        current_node, travel_value, parent_node = queue.pop(0)
+        for n in best_route:
+            if n[0].name == current_node.name:
+                best_route.remove(n)
+                break
+        best_route.append((current_node, travel_value, parent_node))
+        if current_node.name == goal_state:
+            print("Goal state found")
+            break
+        current_node.increase_expanded()
+        for n in current_node.tuple:
+            acumulated_cost = travel_value + n[1] + n[0].heuristic_value-current_node.heuristic_value
+            queue.append((n[0], acumulated_cost, current_node))
+            for q in queue:
+                if q[0].name == n[0].name and q[1] >= acumulated_cost:
+                    queue.remove(q)
+                    queue.append((n[0], acumulated_cost, current_node))
+                    break
+        queue.sort(key=lambda x: x[1])
+    path=[]
+    current_node = goal_state
+    while True:
+        for n in best_route:
+            if n[0].name == current_node:
+                path.append(n)
+                current_node = n[2].name
+        if current_node == "finish":
+            break
+    path.reverse()
+    print("Path from initial state to goal state: ")
+    acumulated_heuristic_value = 0
+    for n in path:
+        print(f'{n[0].name} Expanded: {n[0].times_expanded}')
+        acumulated_heuristic_value += n[0].heuristic_value
+    #check the total number of nodes expanded
+    print(f'Total number of nodes expanded: {sum(n.times_expanded for n in nodes)}')
+    print("Cost: ", path[-1][1]+10)
+
 def main():
     nodes=[]
     initial_state, goal_state, nodes = read_input()
     for n in nodes:
         if n.name == initial_state:
             initial_state = n
-    #get initial state and goal state nodes
-    # print("First Depth Search (random):")
-    # random_depth_search(nodes, initial_state, goal_state)
-    # print("Uniform Cost Search:")
-    # uniform_cost_search(nodes, initial_state, goal_state)
-    #Greedy_Best_First_Search(nodes, initial_state, goal_state)
+    print("First Depth Search (random):")
+    random_depth_search(nodes, initial_state, goal_state)
+    initial_state, goal_state, nodes = read_input()
+
+    print("Uniform Cost Search:")
+    uniform_cost_search(nodes, initial_state, goal_state)
+    initial_state, goal_state, nodes = read_input()
+
+    print("greedy:")
+    Greedy_Best_First_Search(nodes, initial_state, goal_state)
+    initial_state, goal_state, nodes = read_input()
+
+    print("A* Search:")
+    A_star_search(nodes, initial_state, goal_state)
 if __name__ == "__main__":
     main()
