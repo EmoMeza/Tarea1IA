@@ -1,5 +1,7 @@
 import random
-class Node
+
+
+class Node:
     def __init__(self, name, heuristic_value):
         self.name = name
         self.heuristic_value = heuristic_value
@@ -122,6 +124,8 @@ def first_depth_search(nodes, initial_state, goal_state):
         print(f'{n.name} Expanded: {n.times_expanded}')
     print(f'Total number of nodes expanded: {sum(n.times_expanded for n in nodes)}')
     print("Cost: ", cost)
+    if(cost==18):
+        print("Optimal solution found")	
 
 
 # Define a function called uniform_cost_search that takes in three arguments: nodes, initial_state, and goal_state.
@@ -206,57 +210,59 @@ def uniform_cost_search(nodes, initial_state, goal_state):
     #check the total number of nodes expanded
     print(f'Total number of nodes expanded: {sum(n.times_expanded for n in nodes)}')
     print("Cost: ", path[-1][1])
+    if(path[-1][1]==18):
+        print("Optimal solution found")
 
 def Greedy_Best_First_Search(nodes, initial_state, goal_state):
     # Initialize cost and stack with initial state
     cost=0
-    stack=[initial_state]
+    stack=[(initial_state,0)]
     
     # Loop until stack is empty
     while stack:
         # Get node with smallest heuristic value and update variables
-        current_node = get_smallest_node_by_heuristic_value(stack[-1])
-        heuristic_value = current_node.heuristic_value
-        stack[-1].increase_expanded()
-        cost += heuristic_value
+        current_node = get_smallest_node_by_heuristic_value(stack[-1][0])
+        heuristic_value = current_node[0].heuristic_value
+        stack[-1][0].increase_expanded()
+        cost += current_node[1]
         stack.append(current_node)
         
         # Check if goal state is reached and break if true
-        if stack[-1].name == goal_state:
+        if stack[-1][0].name == goal_state:
             print("Goal state found")
             break
         
         # Check if current node has no neighbors and backtrack if true
-        if len(stack[-1].tuple)==0:
+        if len(stack[-1][0].tuple)==0:
             last_node_name=stack[-1].name
             stack.pop()
             for tp in stack[-1].tuple:
                 if tp[0].name == last_node_name:
-                    cost -= tp[0].heuristic_value
+                    cost -= tp[1]
                     stack[-1].erase_tuple(last_node_name)
-                    print(stack[-1].tuple)
                     break
     #print the stack
     print("Path from initial state to goal state: ")
     for n in stack:
-        print(f'{n.name}')
+        print(f'{n[0].name}')
     print("Number of nodes expanded for each node: ")
     for n in nodes:
         print(f'{n.name} Expanded: {n.times_expanded}')
     print(f'Total number of nodes expanded: {sum(n.times_expanded for n in nodes)}')
     print("Cost: ", cost)
-    
-    # while stack:
+    if(cost==18):
+        print("Optimal solution found")
 
 def get_heuristic(node):
     return node[0].heuristic_value
 
 def get_smallest_node_by_heuristic_value(node):
     tuples=[]
-    for i in range(len(node.tuple)):
+    lenght=(len(node.tuple))
+    for i in range(lenght):
         tuples.append(node.tuple[i])  
     smallest_node= min(tuples,key=get_heuristic)
-    return smallest_node[0]
+    return smallest_node
 
 #Define a function named A_star_search that takes in three parameters - nodes, initial_state, and goal_state.
 def A_star_search(nodes, initial_state, goal_state):
@@ -323,6 +329,8 @@ def A_star_search(nodes, initial_state, goal_state):
     #check the total number of nodes expanded
     print(f'Total number of nodes expanded: {sum(n.times_expanded for n in nodes)}')
     print("Cost: ", path[-1][1]+10)
+    if(path[-1][1]+10==18):
+        print("Optimal solution found")
 
 
 def main():
